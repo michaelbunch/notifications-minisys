@@ -10,6 +10,8 @@ import (
 )
 
 func main() {
+	fs := http.FileServer(http.Dir("./frontend/dist/"))
+	http.Handle("/", fs)
 	http.HandleFunc("/api/notifications", apiGetNotifications)
 
 	fmt.Println("Running API Server...")

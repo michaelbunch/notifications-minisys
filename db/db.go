@@ -29,11 +29,12 @@ type Notification struct {
 	ActorId   int    `json:"actor_id"`
 	ActorName string `json:"actor_name"`
 	IsRead    bool   `json:"isRead"`
+	CreatedAt string `json:"createdAt"`
 }
 
 // GetNotifications fetches a user specific list of notifications from the database
 func GetNotifications(conn *sql.DB, userId int) []Notification {
-	rows, err := conn.Query("SELECT n.id, n.subject, n.domain, n.actor_id, ua.name `actor_name`, n.is_read FROM notifications n INNER JOIN users ua ON n.actor_id = ua.id WHERE notifier_id = ?", userId)
+	rows, err := conn.Query("SELECT n.id, n.subject, n.domain, n.actor_id, ua.name `actor_name`, n.is_read, n.created_at FROM notifications n INNER JOIN users ua ON n.actor_id = ua.id WHERE notifier_id = ? ORDER BY n.created_at DESC", userId)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -46,7 +47,8 @@ func GetNotifications(conn *sql.DB, userId int) []Notification {
 		var actorId int
 		var actorName string
 		var isRead int
-		if err := rows.Scan(&id, &subject, &domain, &actorId, &actorName, &isRead); err != nil {
+		var createdAt string
+		if err := rows.Scan(&id, &subject, &domain, &actorId, &actorName, &isRead, &createdAt); err != nil {
 			log.Fatal(err)
 		}
 		notification := Notification{
@@ -56,6 +58,7 @@ func GetNotifications(conn *sql.DB, userId int) []Notification {
 			ActorId:   actorId,
 			ActorName: actorName,
 			IsRead:    convertReadStatus(isRead),
+			CreatedAt: createdAt,
 		}
 		notifications = append(notifications, notification)
 	}
