@@ -3,11 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/michaelbunch/notifications-minisys/db"
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -33,6 +33,9 @@ func apiGetNotifications(w http.ResponseWriter, r *http.Request) {
 	qsUserId := r.URL.Query().Get("user_id")
 	userId, _ := strconv.Atoi(qsUserId)
 
+	log.WithFields(log.Fields{
+		"user_id": userId,
+	}).Info("A request to user notifications was received")
 	notifications := db.GetNotifications(db.Connection(), userId)
 
 	payload, err := json.Marshal(notifications)
