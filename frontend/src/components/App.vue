@@ -17,15 +17,19 @@ import axios from 'axios';
 export default {
   data() {
     return {
+      user_id: 1,
       notifications: []
     }
   },
   methods: {
     async getNotifications() {
       try {
-        const response = await axios.get('/api/notifications');
+        const response = await axios.get('/api/notifications', {
+          params: {
+            user_id: this.user_id
+          }
+        });
         this.notifications = response.data;
-        console.log(response);
       } catch (error) {
         console.error(error);
       }

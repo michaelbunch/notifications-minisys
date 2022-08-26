@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/michaelbunch/notifications-minisys/db"
 )
@@ -20,11 +21,19 @@ func main() {
 	}
 }
 
+type notificationRequest struct {
+	UserId int `json:"user_id"`
+}
+
 func apiGetNotifications(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		http.Error(w, "Method not supported.", http.StatusMethodNotAllowed)
 	}
-	notifications := db.GetNotifications(db.Connection(), 1)
+
+	qsUserId := r.URL.Query().Get("user_id")
+	userId, _ := strconv.Atoi(qsUserId)
+
+	notifications := db.GetNotifications(db.Connection(), userId)
 
 	payload, err := json.Marshal(notifications)
 	if err != nil {
