@@ -14,6 +14,19 @@ export DB_Password=<api_db_password>
 export DB_Name=notifications-minisys
 ```
 
+A sample database schema, with data, can be loaded from `sql/dump.sql`.
+
+The Go code can be run with:
+
 ```
 go run api.go
+```
+
+## Building the Frontend
+
+All frontend assets are located in the `frontend` folder. They are built using Parcel and the generated artifacts are placed in `frontend/dist`.
+
+```
+npm i
+npm run build
 ```
