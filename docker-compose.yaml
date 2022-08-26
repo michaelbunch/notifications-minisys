@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: s3cr3t
+      MYSQL_DATABASE: notifications-minisys
+      MYSQL_USER: apiadmin
+      MYSQL_PASSWORD: s3cr3t
+    ports:
+      - "3306:3306"
