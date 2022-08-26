@@ -18,7 +18,8 @@ export default {
   data() {
     return {
       user_id: 1,
-      notifications: []
+      notifications: [],
+      pollInterval: 10000
     }
   },
   methods: {
@@ -33,10 +34,16 @@ export default {
       } catch (error) {
         console.error(error);
       }
+    },
+    pollNotifications () {
+      this.polling = setInterval(() => {
+        this.getNotifications()
+      }, this.pollInterval)
     }
   },
   mounted() {
     this.getNotifications();
+    this.pollNotifications();
   }
 }
 </script>
